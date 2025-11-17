@@ -19,23 +19,21 @@
   <meta name="author" content="Ziyi Tang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="核心信息解读一、模型核心创新点1. 整流流（Rectified Flow, RF）的噪声采样优化针对传统RF模型对时间步$t \in [0,1]$均匀采样导致中间时间步（优化难度最高）训练不足的问题，提出三种感知相关尺度偏向的时间步采样策略，核心是通过非均匀分布$\pi(t)$增加中间时间步权重，提升模型对复杂生成过程的学习能力：   Logit-Normal采样：通过位置参数$m$（控制偏向数据">
+    <meta name="description" content="文章信息：预印本，未发表顶刊；复旦，上交，浙大，腾讯时间：2025.7核心内容：多条件引导生成的扩散 Transformer 一. 核心提出的东西 主要架构 MMDiT 注意力机制 可训练的去噪 LoRA模块   一个训练&#x2F;测试数据集：SubjectSpatial200K 可以：主体定位标注 空间图标志   多条件融合  二.流程解析![[Pasted image 20251117210">
 <meta property="og:type" content="article">
-<meta property="og:title" content="11.16 论文记录">
-<meta property="og:url" content="https://tangziyi1226-lab.github.io/2025/11/16/11-16-%E8%AE%BA%E6%96%87%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="11.17 UniCombine">
+<meta property="og:url" content="https://tangziyi1226-lab.github.io/2025/11/17/11-17-UniCombine/index.html">
 <meta property="og:site_name" content="喵之暗面">
-<meta property="og:description" content="核心信息解读一、模型核心创新点1. 整流流（Rectified Flow, RF）的噪声采样优化针对传统RF模型对时间步$t \in [0,1]$均匀采样导致中间时间步（优化难度最高）训练不足的问题，提出三种感知相关尺度偏向的时间步采样策略，核心是通过非均匀分布$\pi(t)$增加中间时间步权重，提升模型对复杂生成过程的学习能力：   Logit-Normal采样：通过位置参数$m$（控制偏向数据">
+<meta property="og:description" content="文章信息：预印本，未发表顶刊；复旦，上交，浙大，腾讯时间：2025.7核心内容：多条件引导生成的扩散 Transformer 一. 核心提出的东西 主要架构 MMDiT 注意力机制 可训练的去噪 LoRA模块   一个训练&#x2F;测试数据集：SubjectSpatial200K 可以：主体定位标注 空间图标志   多条件融合  二.流程解析![[Pasted image 20251117210">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-11-16T15:17:49.000Z">
-<meta property="article:modified_time" content="2025-11-17T05:17:47.500Z">
+<meta property="article:published_time" content="2025-11-17T13:18:53.000Z">
+<meta property="article:modified_time" content="2025-11-17T13:19:23.688Z">
 <meta property="article:author" content="Ziyi Tang">
-<meta property="article:tag" content="paper">
-<meta property="article:tag" content="transformer">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>11.16 论文记录 - 喵之暗面</title>
+  <title>11.17 UniCombine - 喵之暗面</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -229,7 +227,7 @@ window.MathJax = {
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="11.16 论文记录"></span>
+            <span id="subtitle" data-typed-text="11.17 UniCombine"></span>
           
         </div>
 
@@ -240,8 +238,8 @@ window.MathJax = {
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-11-16 23:17" pubdate>
-          2025年11月16日 晚上
+        <time datetime="2025-11-17 21:18" pubdate>
+          2025年11月17日 晚上
         </time>
       </span>
     
@@ -252,7 +250,7 @@ window.MathJax = {
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          746 字
         
       </span>
     
@@ -263,7 +261,7 @@ window.MathJax = {
         
         
         
-          16 分钟
+          7 分钟
         
       </span>
     
@@ -309,32 +307,67 @@ window.MathJax = {
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">11.16 论文记录</h1>
+            <h1 id="seo-header">11.17 UniCombine</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="核心信息解读"><a href="#核心信息解读" class="headerlink" title="核心信息解读"></a>核心信息解读</h2><h3 id="一、模型核心创新点"><a href="#一、模型核心创新点" class="headerlink" title="一、模型核心创新点"></a>一、模型核心创新点</h3><h4 id="1-整流流（Rectified-Flow-RF）的噪声采样优化"><a href="#1-整流流（Rectified-Flow-RF）的噪声采样优化" class="headerlink" title="1. 整流流（Rectified Flow, RF）的噪声采样优化"></a>1. 整流流（Rectified Flow, RF）的噪声采样优化</h4><p>针对传统RF模型对时间步$t \in [0,1]$均匀采样导致中间时间步（优化难度最高）训练不足的问题，提出三种<strong>感知相关尺度偏向的时间步采样策略</strong>，核心是通过非均匀分布$\pi(t)$增加中间时间步权重，提升模型对复杂生成过程的学习能力： </p>
+                <p><strong>文章信息：预印本，未发表顶刊；复旦，上交，浙大，腾讯</strong><br><strong>时间：2025.7</strong><br><strong>核心内容：多条件引导生成的扩散 Transformer</strong></p>
+<h2 id="一-核心提出的东西"><a href="#一-核心提出的东西" class="headerlink" title="一. 核心提出的东西"></a>一. 核心提出的东西</h2><ol>
+<li>主要架构<ol>
+<li>MMDiT 注意力机制</li>
+<li>可训练的去噪 LoRA模块</li>
+</ol>
+</li>
+<li>一个训练&#x2F;测试数据集：SubjectSpatial200K<ol>
+<li>可以：主体定位标注</li>
+<li>空间图标志</li>
+</ol>
+</li>
+<li>多条件融合</li>
+</ol>
+<h2 id="二-流程解析"><a href="#二-流程解析" class="headerlink" title="二.流程解析"></a>二.流程解析</h2><p>![[Pasted image 20251117210705.png]]</p>
+<ol>
+<li>Overall Framework<ol>
+<li>文字通过T5、Clip编码器、注意力机制得到$T$这个文本特征</li>
+<li>图片+条件通过VAE 编码器得到去噪特征、条件特征$[X,C_1,C_2]$</li>
+</ol>
+</li>
+<li>单条件设置<ol>
+<li>条件 LoRA 可训练，其他的冻结住</li>
+</ol>
+</li>
+<li>多条件设置<ol>
+<li>总的，去噪 LoRA 可训练</li>
+<li>每个条件 LoRA 冻结，不可训练</li>
+<li>通过注意力模块，协同已有的 LoRA</li>
+</ol>
+</li>
+</ol>
+<h2 id="三-方法"><a href="#三-方法" class="headerlink" title="三.方法"></a>三.方法</h2><ol>
+<li>如何逼近、优化：学习一个向量场 $v_t(X_t,t;\theta)$，这个向量场描述了轨迹的偏微分$dX_t&#x3D;v_t(X_t,t;\theta)dt$<ul>
+<li>其实意思就是：学习到某个状态，向下一个状态变化，需要变化些什么，才能一步步逼近</li>
+</ul>
+</li>
+<li>损失函数：见文章（感觉没有什么特别的）</li>
+<li>核心模型<ol>
+<li>生成一个“指令包”$$S&#x3D;[T;X;C_1;\cdots,C_N]$$</li>
+<li>先把所有的 OminiControl 放在去噪分支，再根据输入激活LoRA</li>
+<li>条件 MMDiT 注意力：防止条件打架<br> - 对于主分支（Denoise LoRA）：所有条件都可以看<br> - 对于条件分支：只看该条件的要求，条件之间不互相交叉（带来的好处，将时间复杂度从$O(N^2)$降到了$O(N)$</li>
+</ol>
+</li>
+</ol>
 <ul>
-<li><strong>Logit-Normal采样</strong>：通过位置参数$m$（控制偏向数据&#x2F;噪声）和尺度参数$s$（控制分布宽度），将采样集中于中间步，公式为<br>$$<br>\pi_{ln}(t;m,s)&#x3D;\frac{1}{s\sqrt{2\pi}}\frac{1}{t(1-t)}\exp\left(-\frac{(\mathrm{logit}(t)-m)^2}{2s^2}\right)<br>$$<br>（$\mathrm{logit}(t)&#x3D;\log\frac{t}{1-t}$），实验中$rf&#x2F;lognorm(0.00,1.00)$（$m&#x3D;0$、$s&#x3D;1$）表现最优。 </li>
-<li><strong>Mode重尾采样</strong>：定义单调函数<br>$$<br>f_{mode}(u;s) &#x3D; 1 - u - s \cdot \left( \cos^2\left(\frac{\pi}{2} u\right) - 1 + u \right)<br>$$<br>确保端点步（$t&#x3D;0$或$t&#x3D;1$）有非零密度，避免极端时间步训练缺失，$s&#x3D;0$时退化为均匀采样。 </li>
-<li><strong>CosMap采样</strong>：映射$u \mapsto t$使log-SNR匹配余弦调度，推导密度<br>$$<br>\pi_{CosMap}(t) &#x3D; \frac{2}{\pi - 2 \pi t + 2 \pi t^2}<br>$$<br>继承余弦调度的稳定性。</li>
+<li>两种模式：<ul>
+<li>完全按照训练好的 LoRA 模块经过注意力调控</li>
+<li>允许条件交叉，训练一个额外的 LoRA</li>
 </ul>
-<h4 id="2-多模态Transformer架构（MM-DiT）"><a href="#2-多模态Transformer架构（MM-DiT）" class="headerlink" title="2. 多模态Transformer架构（MM-DiT）"></a>2. 多模态Transformer架构（MM-DiT）</h4><ul>
-<li>突破传统“固定文本表示→交叉注意力注入”的局限，实现<strong>图文模态双向信息流动与权重分离</strong>： </li>
-<li><strong>双模态独立权重</strong>：为图像、文本token分别设计独立Transformer权重，仅在注意力操作时合并序列，既保留模态特异性（如图像空间特征、文本语义特征），又支持跨模态交互。 </li>
-<li><strong>多文本编码器融合</strong>：使用CLIP-L&#x2F;14、CLIP-G&#x2F;14、T5-XXL三个预训练模型编码文本，输出全局向量$c_{vec}$（2048维）和序列表示$c_{ctxt}$（154×4096维），适配不同复杂度的文本理解需求（如T5对长文本&#x2F;细节描述至关重要）。 </li>
-<li><strong>时间步与文本调制</strong>：将时间步$t$的正弦编码和文本向量$c_{vec}$注入注意力与MLP层，增强模型对生成时序和文本条件的适应性。</li>
+</li>
 </ul>
-<h3 id="3-高分辨率训练与优化技巧"><a href="#3-高分辨率训练与优化技巧" class="headerlink" title="3. 高分辨率训练与优化技巧"></a>3. 高分辨率训练与优化技巧</h3><ul>
-<li><strong>改进自编码器</strong>：提升 latent 通道数$d$从4→16，重建FID从2.41降至1.06，为高分辨率生成提供更精细的 latent 基础。 </li>
-<li><strong>分辨率自适应时间步偏移</strong>：推导公式<br>$$<br>t_m &#x3D; \frac{\sqrt{m&#x2F;n} , t_n}{1 + (\sqrt{m&#x2F;n}-1) t_n}<br>$$<br>将低分辨率（$n$像素）时间步$t_n$映射到高分辨率（$m$像素）$t_m$，保证噪声不确定性一致，1024×1024训练中设偏移系数$\alpha&#x3D;3.0$。</li>
-<li><strong>QK归一化</strong>：注意力计算前对Q&#x2F;K向量做RMSNorm，解决高分辨率混合精度训练中注意力熵失控问题，支持bf16精度训练（性能仅下降~2×）。<br>…</li>
-</ul>
-<h3 id="四、关键公式解读"><a href="#四、关键公式解读" class="headerlink" title="四、关键公式解读"></a>四、关键公式解读</h3><h4 id="1-整流流前向过程（数据-噪声直线路径）"><a href="#1-整流流前向过程（数据-噪声直线路径）" class="headerlink" title="1. 整流流前向过程（数据-噪声直线路径）"></a>1. 整流流前向过程（数据-噪声直线路径）</h4><p>$$<br>z_t &#x3D; (1-t)x_0 + t\epsilon \quad (1)<br>$$</p>
-<h4 id="2-条件向量场（理论velocity）"><a href="#2-条件向量场（理论velocity）" class="headerlink" title="2. 条件向量场（理论velocity）"></a>2. 条件向量场（理论velocity）</h4><p>$$<br>u_t(z|\epsilon) &#x3D; \frac{a_t’}{a_t} z - \frac{b_t}{2} \lambda_t’ \epsilon \quad (2)<br>$$<br>代入$a_t&#x3D;1-t$、$b_t&#x3D;t$后：<br>$$<br>u_t(z|\epsilon) &#x3D; -\frac{1}{1-t} z + \frac{t}{1-t} \epsilon<br>$$</p>
-<h4 id="3-条件流匹配损失（训练目标）"><a href="#3-条件流匹配损失（训练目标）" class="headerlink" title="3. 条件流匹配损失（训练目标）"></a>3. 条件流匹配损失（训练目标）</h4><p>$$<br>\mathcal{L}<em>{CFM} &#x3D; \mathbb{E}</em>{t,p_t(z|\epsilon),p(\epsilon)} \left| v_\Theta(z,t) - u_t(z|\epsilon) \right|_2^2 \quad (3)<br>$$</p>
-<h4 id="4-分辨率自适应时间步偏移"><a href="#4-分辨率自适应时间步偏移" class="headerlink" title="4. 分辨率自适应时间步偏移"></a>4. 分辨率自适应时间步偏移</h4><p>$$<br>t_m &#x3D; \frac{\sqrt{m&#x2F;n} , t_n}{1 + (\sqrt{m&#x2F;n}-1) t_n} \quad (4)<br>$$</p>
+<h2 id="四-实验"><a href="#四-实验" class="headerlink" title="四. 实验"></a>四. 实验</h2><ol>
+<li>场景：多空间生成、主体插入、深度生成、边缘检测生成</li>
+<li>结论：全面领先</li>
+</ol>
 
                 
               </div>
@@ -344,15 +377,6 @@ window.MathJax = {
               <div class="post-metas my-3">
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/paper/" class="print-no-link">#paper</a>
-      
-        <a href="/tags/transformer/" class="print-no-link">#transformer</a>
-      
-    </div>
-  
 </div>
 
 
@@ -361,8 +385,8 @@ window.MathJax = {
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>11.16 论文记录</div>
-      <div>https://tangziyi1226-lab.github.io/2025/11/16/11-16-论文记录/</div>
+      <div>11.17 UniCombine</div>
+      <div>https://tangziyi1226-lab.github.io/2025/11/17/11-17-UniCombine/</div>
     </div>
     <div class="license-meta">
       
@@ -374,7 +398,7 @@ window.MathJax = {
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年11月16日</div>
+          <div>2025年11月17日</div>
         </div>
       
       
@@ -406,18 +430,12 @@ window.MathJax = {
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/11/17/11-17-UniCombine/" title="11.17 UniCombine">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">11.17 UniCombine</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/11/15/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/" title="测试文章">
-                        <span class="hidden-mobile">测试文章</span>
+                      <a href="/2025/11/16/11-16-%E8%AE%BA%E6%96%87%E8%AE%B0%E5%BD%95/" title="11.16 论文记录">
+                        <span class="hidden-mobile">11.16 论文记录</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
