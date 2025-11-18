@@ -67,6 +67,10 @@
 
 
 
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
@@ -205,6 +209,14 @@ window.MathJax = {
             </a>
           </li>
           
+        
+        
+          <li class="nav-item nav-profile">
+            <a class="nav-link" target="_self" href="javascript:;" id="profile-toggle" aria-label="关于喵之暗面">
+              <i class="iconfont icon-user-fill"></i>
+              <span>关于</span>
+            </a>
+          </li>
         
         
           <li class="nav-item" id="color-toggle-btn">
@@ -515,6 +527,89 @@ window.MathJax = {
     
   </main>
 
+  
+  <div class="profile-mask" id="profile-mask"></div>
+  <aside class="profile-drawer" id="profile-drawer" aria-hidden="true">
+    <button class="profile-drawer__close" id="profile-close" aria-label="关闭">
+      <i class="iconfont icon-close"></i>
+    </button>
+    <div class="profile-drawer__header">
+      <div class="profile-drawer__avatar">
+        <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="喵之暗面">
+      </div>
+      <div>
+        <p class="profile-drawer__eyebrow">喵之暗面</p>
+        <h4>喵之暗面</h4>
+        <p class="profile-drawer__subtitle">记录、创作、探索</p>
+      </div>
+    </div>
+    <p class="profile-drawer__description">
+      全职折腾研究生，兼职摄影师。写论文、追模型、收集灵感。
+    </p>
+    
+      <div class="profile-drawer__meta">
+        <i class="iconfont icon-location"></i>
+        <span>上海 · 夜猫工作室</span>
+      </div>
+    
+    
+      <div class="profile-drawer__contact">
+        
+          <a href="mailto:tangziyi1226@gmail.com">
+            <i class="iconfont icon-mail"></i><span>Email</span>
+          </a>
+        
+        
+          <a href="/atom.xml">
+            <i class="iconfont icon-rss"></i><span>RSS</span>
+          </a>
+        
+      </div>
+    
+    
+      <div class="profile-drawer__section">
+        <p class="profile-drawer__label">社交链接</p>
+        <div class="profile-drawer__socials">
+          
+            <a href="https://github.com/tangziyi1226-lab" target="_blank" rel="noopener" aria-label="GitHub">
+              <i class="iconfont icon-github-fill"></i>
+              <span>GitHub</span>
+            </a>
+          
+            <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="Twitter">
+              <i class="iconfont icon-twitter"></i>
+              <span>Twitter</span>
+            </a>
+          
+            <a href="https://zhihu.com/" target="_blank" rel="noopener" aria-label="知乎">
+              <i class="iconfont icon-zhihu"></i>
+              <span>知乎</span>
+            </a>
+          
+        </div>
+      </div>
+    
+    
+      <div class="profile-drawer__section">
+        <p class="profile-drawer__label">兴趣标签</p>
+        <div class="profile-drawer__tags">
+          
+            <span># Diffusion / Transformer</span>
+          
+            <span># 摄影与调色</span>
+          
+            <span># 论文速记</span>
+          
+            <span># 数码折腾</span>
+          
+        </div>
+      </div>
+    
+  </aside>
+
+
+
+
   <footer>
     <div class="footer-inner">
   
@@ -697,6 +792,10 @@ window.MathJax = {
   <script  src="/js/local-search.js" ></script>
 
 
+
+
+  
+<script src="/js/drawer.js"></script>
 
 
 
